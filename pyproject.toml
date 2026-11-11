@@ -1,0 +1,25 @@
+[project]
+name = "langc-course"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.13"
+dependencies = [
+    "anthropic>=2.8.0",
+    "beautifulsoup4>=4.15.0",
+    "langchain>=1.4.10",
+    "langchain-anthropic>=1.7.10",
+    "langchain-community>=0.4.2",
+    "langchain-core>=1.7.7",
+    "langchain-openai>=1.7.4",
+    "langgraph>=1.2.20",
+    "pypdf>=7.0.1",
+    "python-dotenv>=1.2.4",
+]
+
+[project.scripts]
+langc-course = "langc_course:main"
+
+[build-system]
+requires = ["uv_build>=0.13.7,<0.14.0"]
+build-backend = "uv_build"
