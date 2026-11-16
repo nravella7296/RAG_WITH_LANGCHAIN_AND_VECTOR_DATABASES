@@ -92,7 +92,7 @@ print("Hybrid retriever ready")
 def test_query(query, name, retriever):
     """Test a query and show results"""
     results = retriever.invoke(query)
-    print(f'\\n{name} - Query: "{query}"')
+    print(f'\n{name} - Query: "{query}"')
     for i, doc in enumerate(results[:3]):
         preview = doc.page_content[:80] + "..."
         print(f"  {i+1}. {preview}")
