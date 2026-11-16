@@ -98,7 +98,11 @@ class HybridRetriever:
         # Recreate BM25 (it doesn't support incremental adds)
         all_docs = self.vectorstore.get()
         self.bm25_retriever = BM25Retriever.from_documents(
-            [Document(page_content=doc) for doc in all_docs["documents"]], k=self.k
+            [
+                Document(page_content=text, metadata=metadata or {})
+                for text, metadata in zip(all_docs["documents"], all_docs["metadatas"])
+            ],
+            k=self.k,
         )
 
 
