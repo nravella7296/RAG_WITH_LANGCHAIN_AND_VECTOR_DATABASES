@@ -33,6 +33,7 @@ Hands-on exercises for learning [LangChain](https://python.langchain.com/) and [
 ├── document_loaders.py      # Document loader examples
 ├── raw_emb.py               # Raw OpenAI SDK: chat completion + embeddings
 ├── vector_stores.py         # Chroma vector store and retriever examples
+├── rag_pipeline.py          # Retrieval-augmented generation (RAG) pipelines
 ├── docs/
 │   └── langchain_demo.pdf   # Sample PDF used by the PDF loader example
 ├── src/langc_course/        # Package entry point (langc-course script)
@@ -94,6 +95,24 @@ uv run vector_stores.py
 | `exercise_vector_store_setup()` | Exercise: split texts with `RecursiveCharacterTextSplitter`, store in Chroma, return a retriever |
 
 Most examples use a temporary directory, so nothing is left on disk. `persist_chroma()` writes to `./chroma_db/`, which is git-ignored. By default only `exercise_vector_store_setup()` runs; uncomment the others in the `if __name__ == "__main__":` block.
+
+### RAG pipelines
+
+```bash
+uv run rag_pipeline.py
+```
+
+`rag_pipeline.py` builds retrieval-augmented generation chains with LCEL. It splits a small built-in Markdown knowledge base about LangChain with `RecursiveCharacterTextSplitter`, embeds the chunks into Chroma with `OpenAIEmbeddings` (`text-embedding-3-large`), and answers questions with `gpt-4o-mini` (via `init_chat_model`):
+
+| Function | What it shows |
+| --- | --- |
+| `demo_basic_rag()` | A basic chain: retriever → prompt → LLM → `StrOutputParser`, answering only from the retrieved context |
+| `demo_rag_with_sources()` | Labeling retrieved chunks with their `source` metadata so the answer cites them |
+| `demo_rag_with_fallback()` | Making the model answer with a fixed fallback message when the context doesn't contain the answer |
+| `demo_structured_rag()` | Returning a Pydantic `RAGResponse` (answer, confidence, sources, follow-up) via `with_structured_output` |
+| `exercise_document_qa()` | Exercise: a `DocumentQA` class that indexes any text and answers questions with a confidence rating |
+
+By default only `demo_basic_rag()` runs; uncomment the others in the `if __name__ == "__main__":` block.
 
 ## Dependencies
 
