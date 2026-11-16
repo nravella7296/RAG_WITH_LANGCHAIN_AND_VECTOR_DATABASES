@@ -33,6 +33,7 @@ Hands-on exercises for learning [LangChain](https://python.langchain.com/) and [
 ├── document_loaders.py      # Document loader examples
 ├── text_splitters.py        # Text splitting and chunking strategies
 ├── raw_emb.py               # Raw OpenAI SDK: chat completion + embeddings
+├── embeddings_deep.py       # Embeddings: batching, cosine similarity, caching
 ├── vector_stores.py         # Chroma vector store and retriever examples
 ├── rag_pipeline.py          # Retrieval-augmented generation (RAG) pipelines
 ├── docs/
@@ -97,6 +98,23 @@ uv run raw_emb.py
 
 `raw_emb.py` calls the OpenAI SDK directly, without LangChain. It builds a `gpt-4o-mini` chat completion (printing is commented out) and creates an embedding with `text-embedding-3-large`, then prints the response and the vector length.
 
+### Embeddings in depth
+
+```bash
+uv run embeddings_deep.py
+```
+
+`embeddings_deep.py` looks at embeddings directly, using `OpenAIEmbeddings` (`text-embedding-3-large`) and NumPy:
+
+| Function | What it shows |
+| --- | --- |
+| `basic_embeddings()` | Embedding one query with `embed_query`, then printing its dimensions, first values, and norm |
+| `batch_embeddings()` | Embedding several texts at once with `embed_documents` |
+| `similarity_search()` | Ranking documents against a query by cosine similarity, computed by hand |
+| `embedding_caching()` | Caching embeddings with `CacheBackedEmbeddings` and a `LocalFileStore`, so a repeated call reads from the cache instead of the API |
+
+By default only `embedding_caching()` runs; uncomment the others in the `if __name__ == "__main__":` block.
+
 ### Vector stores (Chroma)
 
 ```bash
@@ -139,6 +157,7 @@ By default only `demo_basic_rag()` runs; uncomment the others in the `if __name_
 - `langchain`, `langchain-core`, `langchain-community`: core framework and community loaders
 - `langchain-openai`, `langchain-anthropic`, `anthropic`: model integrations
 - `langchain-chroma`: Chroma vector store integration
+- `langchain-ollama`: Ollama integration for local models
 - `langgraph`: graph-based agent workflows
 - `pypdf`, `beautifulsoup4`: PDF and HTML parsing for loaders
 - `python-dotenv`: loads API keys from `.env`
