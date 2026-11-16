@@ -36,6 +36,7 @@ Hands-on exercises for learning [LangChain](https://python.langchain.com/) and [
 ├── embeddings_deep.py       # Embeddings: batching, cosine similarity, caching
 ├── vector_stores.py         # Chroma vector store and retriever examples
 ├── rag_pipeline.py          # Retrieval-augmented generation (RAG) pipelines
+├── prod_hybrid_search.py    # Hybrid search: BM25 + vector with Reciprocal Rank Fusion
 ├── docs/
 │   └── langchain_demo.pdf   # Sample PDF used by the PDF loader example
 ├── src/langc_course/        # Package entry point (langc-course script)
@@ -152,6 +153,20 @@ uv run rag_pipeline.py
 
 By default only `demo_basic_rag()` runs; uncomment the others in the `if __name__ == "__main__":` block.
 
+### Hybrid search (BM25 + vector)
+
+```bash
+uv run prod_hybrid_search.py
+```
+
+`prod_hybrid_search.py` compares three ways to retrieve from a small set of support documents that mix plain prose with exact identifiers such as `SKU-7742X`, `E_CONN_REFUSED`, and `WCAG`:
+
+- **Vector**: a Chroma retriever over `OpenAIEmbeddings` (`text-embedding-3-large`), good at meaning-based questions.
+- **BM25**: `BM25Retriever` keyword matching, good at exact codes and acronyms.
+- **Hybrid**: `hybrid_retrieve()` merges both result lists with weighted Reciprocal Rank Fusion (RRF), the same approach `EnsembleRetriever` uses internally.
+
+It runs five test queries and prints the top 3 results from each method side by side. Unlike the other scripts, it runs everything at import time; there's no `__main__` block to edit.
+
 ## Dependencies
 
 - `langchain`, `langchain-core`, `langchain-community`: core framework and community loaders
@@ -160,4 +175,5 @@ By default only `demo_basic_rag()` runs; uncomment the others in the `if __name_
 - `langchain-ollama`: Ollama integration for local models
 - `langgraph`: graph-based agent workflows
 - `pypdf`, `beautifulsoup4`: PDF and HTML parsing for loaders
+- `rank-bm25`: BM25 keyword scoring for `BM25Retriever`
 - `python-dotenv`: loads API keys from `.env`
