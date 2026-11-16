@@ -31,6 +31,7 @@ Hands-on exercises for learning [LangChain](https://python.langchain.com/) and [
 .
 ├── main.py                  # Setup check: prints versions and calls both LLMs
 ├── document_loaders.py      # Document loader examples
+├── text_splitters.py        # Text splitting and chunking strategies
 ├── raw_emb.py               # Raw OpenAI SDK: chat completion + embeddings
 ├── vector_stores.py         # Chroma vector store and retriever examples
 ├── rag_pipeline.py          # Retrieval-augmented generation (RAG) pipelines
@@ -68,6 +69,25 @@ uv run document_loaders.py
 | `pdf_loader(path)` | Loading a PDF page by page with `PyPDFLoader` |
 
 By default only `pdf_loader("./docs/langchain_demo.pdf")` runs. To try the others, uncomment them in the `if __name__ == "__main__":` block.
+
+### Text splitters
+
+```bash
+uv run text_splitters.py
+```
+
+`text_splitters.py` compares chunking strategies for RAG on a sample Markdown article, a Python code snippet, and the sample PDF. It needs no API keys.
+
+| Function | What it shows |
+| --- | --- |
+| `recursive_splitter()` | Splitting text with `RecursiveCharacterTextSplitter` and custom separators |
+| `chunk_size_comparison()` | How chunk counts change at sizes 200, 500, and 1000 with 20% overlap |
+| `overlap_importance()` | Chunk boundaries with and without `chunk_overlap` |
+| `markdown_splitter()` | Splitting on headers with `MarkdownHeaderTextSplitter`, keeping them as metadata |
+| `code_splitter()` | Language-aware splitting of Python code with `RecursiveCharacterTextSplitter.from_language` |
+| `document_splitter()` | Loading `docs/langchain_demo.pdf` with `PyPDFLoader` and splitting it with `split_documents`, preserving page metadata |
+
+By default only `document_splitter()` runs; uncomment the others in the `if __name__ == "__main__":` block.
 
 ### Raw OpenAI embeddings
 
