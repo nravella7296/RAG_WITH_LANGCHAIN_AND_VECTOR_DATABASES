@@ -37,6 +37,7 @@ Hands-on exercises for learning [LangChain](https://python.langchain.com/) and [
 ├── vector_stores.py         # Chroma vector store and retriever examples
 ├── rag_pipeline.py          # Retrieval-augmented generation (RAG) pipelines
 ├── prod_hybrid_search.py    # Hybrid search: BM25 + vector with Reciprocal Rank Fusion
+├── final_production.py      # Reusable HybridRetriever class (BM25 + vector)
 ├── docs/
 │   └── langchain_demo.pdf   # Sample PDF used by the PDF loader example
 ├── src/langc_course/        # Package entry point (langc-course script)
@@ -166,6 +167,22 @@ uv run prod_hybrid_search.py
 - **Hybrid**: `hybrid_retrieve()` merges both result lists with weighted Reciprocal Rank Fusion (RRF), the same approach `EnsembleRetriever` uses internally.
 
 It runs five test queries and prints the top 3 results from each method side by side. Unlike the other scripts, it runs everything at import time; there's no `__main__` block to edit.
+
+### Production hybrid retriever
+
+```bash
+uv run final_production.py
+```
+
+`final_production.py` packages the hybrid search above into a reusable `HybridRetriever` class:
+
+| Member | What it does |
+| --- | --- |
+| `HybridRetriever(documents, bm25_weight=0.5, k=4)` | Builds a Chroma vector retriever (`text-embedding-3-large`) and a `BM25Retriever` over the same documents; the vector weight is `1 - bm25_weight` |
+| `search(query)` | Returns the top `k` documents, fusing both retrievers with weighted Reciprocal Rank Fusion via `hybrid_retrieve()` |
+| `add_documents(documents)` | Adds documents to the vector store, then rebuilds the BM25 index from everything stored (BM25 doesn't support incremental adds) |
+
+Running the script builds a retriever over the same sample support documents and prints the results for `"SKU-7742X specifications"`.
 
 ## Dependencies
 
